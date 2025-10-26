@@ -1,0 +1,26 @@
+body {
+  background: #f8f9fa;
+}
+
+.invoice-container {
+  background: #fff;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+}
+
+/* Print Styles */
+@media print {
+  body {
+    background: white;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .invoice-container {
+    box-shadow: none;
+    border: none;
+    margin: 0;
+    padding: 0;
+  }
+}
