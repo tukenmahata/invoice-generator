@@ -11,7 +11,7 @@ body {
   margin: 30px auto;
   padding: 30px;
   background: #fff;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 10px rgba(230, 131, 131, 0.1);
 }
 
 .invoice-header {
@@ -19,7 +19,7 @@ body {
   justify-content: space-between;
   align-items: flex-start;
   padding-bottom: 20px;
-  border-bottom: 2px solid #eee;
+  border-bottom: 2px solid #e1f3ca;
   margin-bottom: 30px;
 }
 
@@ -70,7 +70,7 @@ body {
 }
 
 .invoice-table th {
-  background-color: #f7f7f7;
+  background-color: #e4f5b7;
   font-weight: bold;
 }
 

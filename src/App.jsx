@@ -3,12 +3,12 @@ import './invoice.css';
 
 function App() {
   const [companyName, setCompanyName] = useState('Your Company');
-  const [companyAddress, setCompanyAddress] = useState('123 Street, City, Country');
-  const [companyPhone, setCompanyPhone] = useState('123-456-7890');
+  const [companyAddress, setCompanyAddress] = useState('Jhargram Pin-721507 West Bengal');
+  const [companyPhone, setCompanyPhone] = useState('91+7001485305');
   const [logo, setLogo] = useState(null);
 
   const [clientName, setClientName] = useState('Client Name');
-  const [clientAddress, setClientAddress] = useState('456 Avenue, City, Country');
+  const [clientAddress, setClientAddress] = useState('Beleghata Kolkata West Bengal');
   
   const [invoiceNumber, setInvoiceNumber] = useState('001');
   const [invoiceDate, setInvoiceDate] = useState(new Date().toLocaleDateString());
@@ -104,11 +104,11 @@ function App() {
         <button onClick={addItem} className="btn btn-primary no-print">Add Item</button>
 
         <div className="invoice-summary">
-           <div className=\"gst-controls no-print\">
-            <input type=\"checkbox\" checked={gstEnabled} onChange={e => setGstEnabled(e.target.checked)} />
+           <div className="gst-controls no-print">
+            <input type="checkbox" checked={gstEnabled} onChange={e => setGstEnabled(e.target.checked)} />
             <label>Enable GST</label>
             {gstEnabled && (
-              <input type=\"number\" value={gstRate} onChange={e => setGstRate(e.target.valueAsNumber)} />
+              <input type="number" value={gstRate} onChange={e => setGstRate(e.target.valueAsNumber)} />
             )}
           </div>
           <p><strong>Subtotal:</strong> {currency}{subtotal.toFixed(2)}</p>
