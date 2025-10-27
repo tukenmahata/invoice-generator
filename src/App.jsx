@@ -13,10 +13,11 @@ function App() {
   const [invoiceNumber, setInvoiceNumber] = useState('001');
   const [invoiceDate, setInvoiceDate] = useState(new Date().toLocaleDateString());
   const [dueDate, setDueDate] = useState('');
+  const [currency, setCurrency] = useState('₹');
 
   const [items, setItems] = useState([
-    { description: 'Item 1', quantity: 1, price: 1000.00 },
-    { description: 'Item 2', quantity: 2, price: 2000.00 },
+    { description: 'Item 1', quantity: 1, unitPrice: 1000.00 },
+    { description: 'Item 2', quantity: 2, unitPrice: 2000.00 },
   ]);
 
   const [notes, setNotes] = useState('Thanks for your business!');
@@ -36,7 +37,7 @@ function App() {
   };
 
   const addItem = () => {
-    setItems([...items, { description: '', quantity: 1, price: 0.00 }]);
+    setItems([...items, { description: '', quantity: 1, unitPrice: 0.00 }]);
   };
 
   const removeItem = (index) => {
@@ -44,7 +45,7 @@ function App() {
     setItems(newItems);
   };
 
-  const subtotal = items.reduce((acc, item) => acc + (item.quantity * item.price), 0);
+  const subtotal = items.reduce((acc, item) => acc + (item.quantity * item.unitPrice), 0);
   const gst = subtotal * (gstRate / 100);
   const total = subtotal + gst;
 
@@ -73,6 +74,7 @@ function App() {
             <p><strong>Invoice #:</strong> <input type="text" value={invoiceNumber} onChange={e => setInvoiceNumber(e.target.value)} /></p>
             <p><strong>Date:</strong> <input type="text" value={invoiceDate} onChange={e => setInvoiceDate(e.target.value)} /></p>
             <p><strong>Due Date:</strong> <input type="text" value={dueDate} onChange={e => setDueDate(e.target.value)} /></p>
+            <p><strong>Currency:</strong> <input type="text" value={currency} onChange={e => setCurrency(e.target.value)} /></p>
           </div>
         </div>
 
@@ -81,8 +83,8 @@ function App() {
             <tr>
               <th>Item</th>
               <th>Quantity</th>
-              <th>Price (₹)</th>
-              <th>Total (₹)</th>
+              <th>Unit Price ({currency})</th>
+              <th>Total ({currency})</th>
               <th className="no-print"></th>
             </tr>
           </thead>
@@ -91,8 +93,8 @@ function App() {
               <tr key={index}>
                 <td><input type="text" value={item.description} onChange={e => handleItemChange(index, 'description', e.target.value)} placeholder="Item description" /></td>
                 <td><input type="number" value={item.quantity} onChange={e => handleItemChange(index, 'quantity', e.target.valueAsNumber)} /></td>
-                <td><input type="number" value={item.price} onChange={e => handleItemChange(index, 'price', e.target.valueAsNumber)} /></td>
-                <td>₹{(item.quantity * item.price).toFixed(2)}</td>
+                <td><input type="number" value={item.unitPrice} onChange={e => handleItemChange(index, 'unitPrice', e.target.valueAsNumber)} /></td>
+                <td>{currency}{(item.quantity * item.unitPrice).toFixed(2)}</td>
                 <td className="no-print"><button onClick={() => removeItem(index)}>X</button></td>
               </tr>
             ))}
@@ -101,9 +103,9 @@ function App() {
         <button onClick={addItem} className="btn btn-primary no-print">Add Item</button>
 
         <div className="invoice-summary">
-          <p><strong>Subtotal:</strong> ₹{subtotal.toFixed(2)}</p>
-          <p><strong>GST ({gstRate}%):</strong> ₹{gst.toFixed(2)}</p>
-          <h3><strong>Total:</strong> ₹{total.toFixed(2)}</h3>
+          <p><strong>Subtotal:</strong> {currency}{subtotal.toFixed(2)}</p>
+          <p><strong>GST ({gstRate}%):</strong> {currency}{gst.toFixed(2)}</p>
+          <h3><strong>Total:</strong> {currency}{total.toFixed(2)}</h3>
         </div>
 
         <div className="invoice-notes">
