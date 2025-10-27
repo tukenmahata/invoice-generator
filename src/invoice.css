@@ -1,26 +1,147 @@
+/* src/invoice.css */
 body {
-  background: #f8f9fa;
+  font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
+  background-color: #f4f4f4;
+  color: #333;
+  -webkit-font-smoothing: antialiased;
 }
 
-.invoice-container {
-  background: #fff;
+.invoice-wrapper {
+  max-width: 800px;
+  margin: 30px auto;
   padding: 30px;
-  border-radius: 8px;
-  box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+  background: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Print Styles */
+.invoice-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #eee;
+  margin-bottom: 30px;
+}
+
+.invoice-logo,
+.invoice-company-details {
+  flex: 1;
+}
+
+.invoice-logo img {
+  max-width: 150px;
+}
+
+.invoice-company-details {
+  text-align: right;
+}
+
+.invoice-company-details input {
+  display: block;
+  width: 100%;
+  border: none;
+  text-align: right;
+  padding: 2px 0;
+  margin-bottom: 5px;
+}
+
+.invoice-details {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 30px;
+}
+
+.invoice-client-details input, .invoice-meta-details input {
+    display: block;
+    border: none;
+}
+
+.invoice-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.invoice-table th,
+.invoice-table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #eee;
+  text-align: left;
+}
+
+.invoice-table th {
+  background-color: #f7f7f7;
+  font-weight: bold;
+}
+
+.invoice-table input {
+    width: 100%;
+    border: none;
+}
+
+.invoice-summary {
+  text-align: right;
+  margin-top: 20px;
+}
+
+.invoice-summary p {
+    margin: 5px 0;
+}
+
+.invoice-summary input {
+    border: none;
+    text-align: right;
+    width: 50px;
+}
+
+.invoice-notes, .invoice-footer {
+    margin-top: 30px;
+}
+
+.invoice-notes textarea {
+    width: 100%;
+    border: 1px solid #eee;
+    padding: 10px;
+}
+
+.invoice-footer {
+    text-align: center;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+    font-size: 0.9em;
+    color: #777;
+}
+
+.controls {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background-color: #007bff;
+}
+
+.btn-success {
+    background-color: #28a745;
+}
+
 @media print {
   body {
-    background: white;
+    background-color: #fff;
   }
   .no-print {
-    display: none !important;
+    display: none;
   }
-  .invoice-container {
+  .invoice-wrapper {
     box-shadow: none;
-    border: none;
     margin: 0;
-    padding: 0;
+    max-width: 100%;
   }
 }

@@ -1,150 +1,125 @@
-import React, { useState } from "react";
-//import "bootstrap/dist/css/bootstrap.min.css";
-/* Bootstrap CSS via CDN is included in public/index.html, not imported in JS files */
-import "./invoice.css"; // custom styling for print & UI
+import React, { useState } from 'react';
+import './invoice.css';
 
-export default function App() {
+function App() {
+  const [companyName, setCompanyName] = useState('Your Company');
+  const [companyAddress, setCompanyAddress] = useState('123 Street, City, Country');
+  const [companyPhone, setCompanyPhone] = useState('123-456-7890');
   const [logo, setLogo] = useState(null);
-  const [companyName, setCompanyName] = useState("Your Company Name");
-  const [clientName, setClientName] = useState("Client Name");
-  const [invoiceNo, setInvoiceNo] = useState("2515");
-  const [invoiceDate, setInvoiceDate] = useState(new Date().toISOString().slice(0, 10));
-  const [dueDate, setDueDate] = useState("");
-  const [items, setItems] = useState([{ description: "", qty: 1, price: 0 }]);
 
-  const addItem = () => setItems([...items, { description: "", qty: 1, price: 0 }]);
-  const removeItem = (i) => setItems(items.filter((_, index) => index !== i));
-  const updateItem = (i, field, val) => {
+  const [clientName, setClientName] = useState('Client Name');
+  const [clientAddress, setClientAddress] = useState('456 Avenue, City, Country');
+  
+  const [invoiceNumber, setInvoiceNumber] = useState('001');
+  const [invoiceDate, setInvoiceDate] = useState(new Date().toLocaleDateString());
+  const [dueDate, setDueDate] = useState('');
+
+  const [items, setItems] = useState([
+    { description: 'Item 1', quantity: 1, price: 1000.00 },
+    { description: 'Item 2', quantity: 2, price: 2000.00 },
+  ]);
+
+  const [notes, setNotes] = useState('Thanks for your business!');
+  const [gstRate] = useState(18); // Fixed GST Rate
+
+  const handleLogoUpload = (event) => {
+    if (event.target.files && event.target.files[0]) {
+      let img = event.target.files[0];
+      setLogo(URL.createObjectURL(img));
+    }
+  };
+
+  const handleItemChange = (index, field, value) => {
     const newItems = [...items];
-    newItems[i][field] = field === "qty" || field === "price" ? Number(val) : val;
+    newItems[index][field] = value;
     setItems(newItems);
   };
 
-  const subtotal = items.reduce((s, it) => s + it.qty * it.price, 0);
-  const tax = subtotal * 0.0; // change tax if needed
-  const total = subtotal + tax;
-
-  const handleLogoUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) setLogo(URL.createObjectURL(file));
+  const addItem = () => {
+    setItems([...items, { description: '', quantity: 1, price: 0.00 }]);
   };
 
+  const removeItem = (index) => {
+    const newItems = items.filter((_, i) => i !== index);
+    setItems(newItems);
+  };
+
+  const subtotal = items.reduce((acc, item) => acc + (item.quantity * item.price), 0);
+  const gst = subtotal * (gstRate / 100);
+  const total = subtotal + gst;
+
   return (
-    <div className="container my-4 invoice-container">
-      {/* Header */}
-      <div className="row align-items-center border-bottom pb-3 mb-4">
-        <div className="col-md-6">
-          {logo ? (
-            <img src={logo} alt="Logo" className="img-fluid mb-2" style={{ maxHeight: "80px" }} />
-          ) : (
-            <div className="border p-3 text-muted">Upload Logo</div>
-          )}
-          <input type="file" accept="image/*" onChange={handleLogoUpload} className="form-control mt-2" />
+    <div className="invoice-wrapper">
+      <div className="invoice" id="invoice">
+        <div className="invoice-header">
+          <div className="invoice-logo">
+            {logo ? <img src={logo} alt="Company Logo" /> : <h2>Your Logo</h2>}
+            <input type="file" onChange={handleLogoUpload} className="no-print" />
+          </div>
+          <div className="invoice-company-details">
+            <input type="text" value={companyName} onChange={e => setCompanyName(e.target.value)} placeholder="Your Company" />
+            <input type="text" value={companyAddress} onChange={e => setCompanyAddress(e.target.value)} placeholder="Company Address" />
+            <input type="text" value={companyPhone} onChange={e => setCompanyPhone(e.target.value)} placeholder="Phone" />
+          </div>
         </div>
-        <div className="col-md-6 text-end">
-          <h2 className="fw-bold">INVOICE #{invoiceNo}</h2>
-          <p>Date: <input type="date" value={invoiceDate} onChange={(e) => setInvoiceDate(e.target.value)} /></p>
-          <p>Due Date: <input type="date" value={dueDate} onChange={(e) => setDueDate(e.target.value)} /></p>
-        </div>
-      </div>
 
-      {/* Client Info */}
-      <div className="row mb-4">
-        <div className="col-md-6">
-          <h5>Invoice To:</h5>
-          <input
-            type="text"
-            className="form-control"
-            value={clientName}
-            onChange={(e) => setClientName(e.target.value)}
-          />
+        <div className="invoice-details">
+          <div className="invoice-client-details">
+            <h3>Bill To:</h3>
+            <input type="text" value={clientName} onChange={e => setClientName(e.target.value)} placeholder="Client Name" />
+            <input type="text" value={clientAddress} onChange={e => setClientAddress(e.target.value)} placeholder="Client Address" />
+          </div>
+          <div className="invoice-meta-details">
+            <p><strong>Invoice #:</strong> <input type="text" value={invoiceNumber} onChange={e => setInvoiceNumber(e.target.value)} /></p>
+            <p><strong>Date:</strong> <input type="text" value={invoiceDate} onChange={e => setInvoiceDate(e.target.value)} /></p>
+            <p><strong>Due Date:</strong> <input type="text" value={dueDate} onChange={e => setDueDate(e.target.value)} /></p>
+          </div>
         </div>
-        <div className="col-md-6 text-end">
-          <h5>From:</h5>
-          <input
-            type="text"
-            className="form-control"
-            value={companyName}
-            onChange={(e) => setCompanyName(e.target.value)}
-          />
-        </div>
-      </div>
 
-      {/* Items Table */}
-      <table className="table table-bordered">
-        <thead className="table-light">
-          <tr>
-            <th>Description</th>
-            <th style={{ width: "80px" }}>Qty</th>
-            <th style={{ width: "120px" }}>Price (₹)</th>
-            <th style={{ width: "120px" }}>Total (₹)</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {items.map((it, i) => (
-            <tr key={i}>
-              <td>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={it.description}
-                  onChange={(e) => updateItem(i, "description", e.target.value)}
-                />
-              </td>
-              <td>
-                <input
-                  type="number"
-                  className="form-control"
-                  value={it.qty}
-                  onChange={(e) => updateItem(i, "qty", e.target.value)}
-                />
-              </td>
-              <td>
-                <input
-                  type="number"
-                  className="form-control"
-                  value={it.price}
-                  onChange={(e) => updateItem(i, "price", e.target.value)}
-                />
-              </td>
-              <td>{it.qty * it.price}</td>
-              <td>
-                <button className="btn btn-danger btn-sm" onClick={() => removeItem(i)}>X</button>
-              </td>
+        <table className="invoice-table">
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Quantity</th>
+              <th>Price (₹)</th>
+              <th>Total (₹)</th>
+              <th className="no-print"></th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-      <button className="btn btn-primary mb-4" onClick={addItem}>+ Add Item</button>
+          </thead>
+          <tbody>
+            {items.map((item, index) => (
+              <tr key={index}>
+                <td><input type="text" value={item.description} onChange={e => handleItemChange(index, 'description', e.target.value)} placeholder="Item description" /></td>
+                <td><input type="number" value={item.quantity} onChange={e => handleItemChange(index, 'quantity', e.target.valueAsNumber)} /></td>
+                <td><input type="number" value={item.price} onChange={e => handleItemChange(index, 'price', e.target.valueAsNumber)} /></td>
+                <td>₹{(item.quantity * item.price).toFixed(2)}</td>
+                <td className="no-print"><button onClick={() => removeItem(index)}>X</button></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <button onClick={addItem} className="btn btn-primary no-print">Add Item</button>
 
-      {/* Totals */}
-      <div className="row">
-        <div className="col-md-6"></div>
-        <div className="col-md-6">
-          <table className="table">
-            <tbody>
-              <tr>
-                <td>Subtotal</td>
-                <td className="text-end">₹{subtotal.toFixed(2)}</td>
-              </tr>
-              <tr>
-                <td>Tax</td>
-                <td className="text-end">₹{tax.toFixed(2)}</td>
-              </tr>
-              <tr className="fw-bold">
-                <td>Total</td>
-                <td className="text-end">₹{total.toFixed(2)}</td>
-              </tr>
-            </tbody>
-          </table>
+        <div className="invoice-summary">
+          <p><strong>Subtotal:</strong> ₹{subtotal.toFixed(2)}</p>
+          <p><strong>GST ({gstRate}%):</strong> ₹{gst.toFixed(2)}</p>
+          <h3><strong>Total:</strong> ₹{total.toFixed(2)}</h3>
+        </div>
+
+        <div className="invoice-notes">
+          <h4>Notes</h4>
+          <textarea value={notes} onChange={e => setNotes(e.target.value)}></textarea>
+        </div>
+
+        <div className="invoice-footer">
+          <p>Thank you for your business.</p>
         </div>
       </div>
-
-      {/* Print & Download */}
-      <div className="text-center mt-4 no-print">
-        <button className="btn btn-success me-2" onClick={() => window.print()}>🖨 Print Invoice</button>
+      <div className="no-print controls">
+        <button onClick={() => window.print()} className="btn btn-success">Print Invoice</button>
       </div>
     </div>
   );
 }
+
+export default App;
