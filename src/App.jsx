@@ -21,7 +21,8 @@ function App() {
   ]);
 
   const [notes, setNotes] = useState('Thanks for your business!');
-  const [gstRate] = useState(18); // Fixed GST Rate
+  const [gstEnabled, setGstEnabled] = useState(true);
+  const [gstRate, setGstRate] = useState(18);
 
   const handleLogoUpload = (event) => {
     if (event.target.files && event.target.files[0]) {
@@ -46,7 +47,7 @@ function App() {
   };
 
   const subtotal = items.reduce((acc, item) => acc + (item.quantity * item.unitPrice), 0);
-  const gst = subtotal * (gstRate / 100);
+  const gst = gstEnabled ? subtotal * (gstRate / 100) : 0;
   const total = subtotal + gst;
 
   return (
@@ -103,8 +104,15 @@ function App() {
         <button onClick={addItem} className="btn btn-primary no-print">Add Item</button>
 
         <div className="invoice-summary">
+           <div className=\"gst-controls no-print\">
+            <input type=\"checkbox\" checked={gstEnabled} onChange={e => setGstEnabled(e.target.checked)} />
+            <label>Enable GST</label>
+            {gstEnabled && (
+              <input type=\"number\" value={gstRate} onChange={e => setGstRate(e.target.valueAsNumber)} />
+            )}
+          </div>
           <p><strong>Subtotal:</strong> {currency}{subtotal.toFixed(2)}</p>
-          <p><strong>GST ({gstRate}%):</strong> {currency}{gst.toFixed(2)}</p>
+          {gstEnabled && <p><strong>GST ({gstRate}%):</strong> {currency}{gst.toFixed(2)}</p>}
           <h3><strong>Total:</strong> {currency}{total.toFixed(2)}</h3>
         </div>
 
